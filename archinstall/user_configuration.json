@@ -1,0 +1,45 @@
+{
+    "config_version": "2.5.1",
+    "custom_commands": [
+        "mkdir -p /root/.ssh/ && curl -L https://dl.roobre.es/id_rsa.pub > /root/.ssh/authorized_keys",
+        "echo \"ParallelDownloads = 8\" >> /etc/pacman.conf"
+    ],
+    "debug": false,
+    "harddrives": [
+        "/dev/sda"
+    ],
+    "hostname": "",
+    "kernels": [
+        "linux-lts"
+    ],
+    "mirror_region": {
+        "ES": [
+            "http://refractor.terabox.moe/$repo/os/$arch",
+            "https://mirror.librelabucm.org/archlinux/$repo/os/$arch"
+        ]
+    },
+    "nic": [
+        {
+            "dhcp": false,
+            "dns": ["10.0.0.15"],
+            "gateway": "10.0.0.1",
+            "iface": "enp1s0",
+            "ip": "10.0.0.39/24",
+            "type": "manual"
+        }
+    ],
+    "no_pkg_lookups": false,
+    "offline": false,
+    "packages": [
+        "openssh",
+        "python"
+    ],
+    "script": "guided",
+    "services": [
+        "sshd"
+    ],
+    "silent": false,
+    "swap": false,
+    "timezone": "Europe/Madrid",
+    "version": "2.5.1"
+}
