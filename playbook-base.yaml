@@ -5,15 +5,29 @@
   tasks:
   - name: Core packages are installed
     community.general.pacman:
-      update_cache: true
       # https://unix.stackexchange.com/questions/274727/how-to-force-pacman-to-answer-yes-to-all-questions/584001#584001
       extra_args: --ask 4 --noconfirm
       state: present
-      name:
-        - cri-o
-        - kubernetes-tools
-        - kubelet
+      name: [
+        cri-o, runc, kubernetes-tools, kubelet,
+        btop, htop, lsof
+      ]
   - name: Override files are copied
     ansible.builtin.copy:
       src: files/
       dest: /
+  - name: Systemd-resolved is disabled
+    ansible.builtin.systemd:
+      name: systemd-resolved
+      state: stopped
+      enabled: false
+      masked: true
+  - name: CRI-O is started and enabled
+    ansible.builtin.systemd:
+      name: crio
+      state: started
+      enabled: yes
+  - name: Kubelet is enabled
+    ansible.builtin.systemd:
+      name: kubelet
+      enabled: yes
