@@ -1,6 +1,7 @@
 - name: Basic host setup
   hosts: kubernetes
   remote_user: root
+  strategy: free
 
   tasks:
   - name: Core packages are installed
