@@ -1,0 +1,21 @@
+- name: Upgrade worker nodes
+  hosts: kubernetes
+  remote_user: root
+
+  # Upgrade hosts one by one
+  strategy: host_pinned
+  serial: 1
+
+  tasks:
+  - name: Upgrade system
+    community.general.pacman:
+      upgrade: true
+      update_cache: true
+  - name: Restart CRI-O
+    ansible.builtin.systemd:
+      name: crio
+      state: restarted
+  - name: Restart kubelet
+    ansible.builtin.systemd:
+      name: kubelet
+      state: restarted
