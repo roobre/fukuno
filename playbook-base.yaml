@@ -1,8 +1,7 @@
 - name: Basic host setup
-  hosts: kubernetes
+  hosts: workers
   remote_user: root
   strategy: free
-
   tasks:
   - name: Core packages are installed
     community.general.pacman:
@@ -13,10 +12,12 @@
         cri-o, runc, kubernetes-tools, kubelet,
         btop, htop, lsof
       ]
+
   - name: Override files are copied
     ansible.builtin.copy:
       src: files/
       dest: /
+
   - name: Systemd-resolved is disabled
     ansible.builtin.systemd:
       name: systemd-resolved
@@ -28,6 +29,13 @@
       name: crio
       state: started
       enabled: yes
+
+# Storage nodes need disks to be manually decrypted, so kubelet should not be enabled on them.
+- name: Enable kubelet
+  hosts: workers:!storage
+  remote_user: root
+  strategy: free
+  tasks:
   - name: Kubelet is enabled
     ansible.builtin.systemd:
       name: kubelet
