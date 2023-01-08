@@ -1,5 +1,6 @@
 - name: Upgrade worker nodes
-  hosts: kubernetes
+  # Do not upgrade terabox automatically
+  hosts: workers:!storage
   remote_user: root
 
   # Upgrade hosts one by one
@@ -8,14 +9,30 @@
 
   tasks:
   - name: Upgrade system
+    register: upgraded
     community.general.pacman:
       upgrade: true
       update_cache: true
-  - name: Restart CRI-O
+  - meta: end_play
+    when: |
+      'packages' not in upgraded or upgraded.packages | length == 0
+
+  - name: Print upgraded packages 
+    ansible.builtin.debug:
+      var: upgraded.packages
+  - name: Restart container runtime
+    when: |
+      upgraded.packages | intersect(['kubelet', 'cri-o']) | length > 0
     ansible.builtin.systemd:
       name: crio
-      state: restarted
+      state: stopped
   - name: Restart kubelet
+    when: |
+      upgraded.packages | intersect(['kubelet', 'cri-o']) | length > 0
     ansible.builtin.systemd:
       name: kubelet
-      state: restarted
+      state: stopped
+  - name: Reboot node if kernel was upgraded
+    when: |
+      upgraded.packages | intersect(['linux', 'linux-lts']) | length > 0
+    ansible.builtin.reboot: {}
