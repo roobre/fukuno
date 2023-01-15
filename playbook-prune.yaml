@@ -1,0 +1,8 @@
+- name: Cleanup unused images
+  hosts: workers
+  remote_user: root
+  strategy: free
+  tasks:
+  - name: Crictl prune
+    ansible.builtin.command:
+      cmd: crictl rmi --prune
