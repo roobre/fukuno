@@ -1,11 +1,11 @@
 [masters]
-10.0.0.5
+gigabox ansible_host=10.0.0.5
 
 [storage]
-10.0.0.10
+terabox ansible_host=10.0.0.10
 
 [workers]
-10.0.0.10
-10.0.0.30
-10.0.0.31
-10.0.0.32 # fukuno-f6 has both 10.0.0.32 (wireless) and dhcp (wired)
+terabox   ansible_host=10.0.0.10
+fukuno-a7 ansible_host=10.0.0.30
+fukuno-37 ansible_host=10.0.0.31
+fukuno-f6 ansible_host=10.0.0.32 # fukuno-f6 has both 10.0.0.32 (wireless) and dhcp (wired)
