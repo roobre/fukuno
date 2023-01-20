@@ -9,7 +9,7 @@
       extra_args: --ask 4 --noconfirm
       state: present
       name: [
-        cri-o, runc, kubernetes-tools, kubelet,
+        cri-o, runc, kubernetes-tools, kubelet, nfs-utils,
         btop, htop, lsof
       ]
 
@@ -40,3 +40,20 @@
     ansible.builtin.systemd:
       name: kubelet
       enabled: yes
+
+- name: Storage NFS setup
+  hosts: storage
+  remote_user: root
+  strategy: free
+  tasks:
+    - name: Configure NFS exports
+      ansible.builtin.copy:
+        content: |
+          # For now only hass uses nfs mounts.
+          /mnt/zmir/docker/homeassistant	10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
+        dest: /etc/exports.d/kubernetes.exports
+    - name: Enable NFS server
+      ansible.builtin.systemd:
+        name: nfs-server
+        state: restarted
+        enabled: yes
