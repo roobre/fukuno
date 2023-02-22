@@ -56,4 +56,5 @@
       ansible.builtin.systemd:
         name: nfs-server
         state: restarted
+        # NFS unit has an overridden WantedBy on Terabox.
         enabled: yes
