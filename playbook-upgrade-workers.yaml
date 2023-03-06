@@ -13,7 +13,7 @@
     community.general.pacman:
       upgrade: true
       update_cache: true
-  - meta: end_play
+  - meta: end_host
     when: |
       'packages' not in upgraded or upgraded.packages | length == 0
 
