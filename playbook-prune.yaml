@@ -5,4 +5,4 @@
   tasks:
   - name: Crictl prune
     ansible.builtin.command:
-      cmd: crictl rmi --prune
+      cmd: crictl --timeout 5s rmi --prune
