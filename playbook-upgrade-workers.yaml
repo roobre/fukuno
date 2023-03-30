@@ -15,7 +15,7 @@
       update_cache: true
   - meta: end_host
     when: |
-      'packages' not in upgraded or upgraded.packages | length == 0
+      ('packages' not in upgraded) or (upgraded.packages | length == 0)
 
   - name: Print upgraded packages 
     ansible.builtin.debug:
@@ -36,3 +36,9 @@
     when: |
       upgraded.packages | intersect(['linux', 'linux-lts']) | length > 0
     ansible.builtin.reboot: {}
+  - name: Wait until DNS is healthy
+    delegate_to: gigabox
+    ansible.builtin.shell:
+      cmd: |
+        kubectl wait --for=condition=ready -n dnscrypt-proxy pods --all && \
+        kubectl wait --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
