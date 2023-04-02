@@ -25,13 +25,13 @@
       upgraded.packages | intersect(['kubelet', 'cri-o']) | length > 0
     ansible.builtin.systemd:
       name: crio
-      state: stopped
+      state: restarted
   - name: Restart kubelet
     when: |
       upgraded.packages | intersect(['kubelet', 'cri-o']) | length > 0
     ansible.builtin.systemd:
       name: kubelet
-      state: stopped
+      state: restarted
   - name: Reboot node if kernel was upgraded
     when: |
       upgraded.packages | intersect(['linux', 'linux-lts']) | length > 0
