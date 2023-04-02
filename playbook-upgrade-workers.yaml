@@ -40,5 +40,5 @@
     delegate_to: gigabox
     ansible.builtin.shell:
       cmd: |
-        kubectl wait --for=condition=ready -n dnscrypt-proxy pods --all && \
-        kubectl wait --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
+        kubectl wait --timeout=5m --for=condition=ready -n dnscrypt-proxy pods --all && \
+        kubectl wait --timeout=2m --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
