@@ -49,8 +49,12 @@
     - name: Configure NFS exports
       ansible.builtin.copy:
         content: |
-          # For now only hass uses nfs mounts.
+          # Legacy HASS mount
           /mnt/zmir/docker/homeassistant	10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
+          # NFS provisioner
+          /mnt/zmir/k8s  10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
+          # Media
+          /mnt/zmir/media  10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
         dest: /etc/exports.d/kubernetes.exports
     - name: Enable NFS server
       ansible.builtin.systemd:
