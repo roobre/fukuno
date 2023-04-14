@@ -9,7 +9,15 @@
       extra_args: --ask 4 --noconfirm
       state: present
       name: [
-        cri-o, runc, kubernetes-tools, kubelet, nfs-utils,
+        # Container runtime
+        cri-o, crictl, crun,
+        # Kubelet & kubectl
+        kubelet, kubectl,
+        # Kubeadm is needed in worker nodes as it provides /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
+        kubeadm,
+        # NFS
+        nfs-utils,
+        # Misc node administration tools.
         btop, htop, lsof
       ]
 
