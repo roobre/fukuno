@@ -18,7 +18,7 @@
         # NFS
         nfs-utils,
         # Misc node administration tools.
-        btop, htop, lsof
+        btop, htop, lsof, nano
       ]
 
   - name: Override files are copied
