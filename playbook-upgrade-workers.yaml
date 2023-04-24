@@ -20,6 +20,7 @@
   - name: Print upgraded packages 
     ansible.builtin.debug:
       var: upgraded.packages
+
   - name: Restart container runtime
     when: |
       upgraded.packages | intersect(['kubelet', 'cri-o']) | length > 0
