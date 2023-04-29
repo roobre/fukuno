@@ -73,7 +73,7 @@
         enabled: yes
     - name: Kubelet is enabled  # Storage nodes override kubelet.service's WantedBy.
       ansible.builtin.systemd:
-        name: crio
+        name: kubelet
         enabled: yes
 
 - name: Control plane node configuration
