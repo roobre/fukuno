@@ -1,0 +1,32 @@
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+# Do not use systemd-resolved resolv.conf file.
+resolvConf: /etc/resolv.conf
+{%- if "control_plane" in group_names %}
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+clusterName: Curry
+controlPlaneEndpoint: {{ apiserver_host }}:6443
+networking:
+  dnsDomain: cluster.local
+  podSubnet: 10.185.0.0/16
+  serviceSubnet: 10.96.0.0/12
+etcd:
+  external:
+    endpoints:
+      - https://{{ etcd_host }}:2379
+    certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
+    keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key
+    caFile: /etc/kubernetes/pki/etcd/ca.crt
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+nodeRegistration:
+  ignorePreflightErrors:
+    # "External" etcd will not be up until the kubelet brings it up.
+    - ExternalEtcdVersion
+skipPhases:
+  # Cilium replaces kube-proxy.
+  - addon/kube-proxy
+{%- endif %}

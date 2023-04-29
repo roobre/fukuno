@@ -1,5 +1,9 @@
-[masters]
-gigabox ansible_host=10.0.0.5
+[all:vars]
+apiserver_host=10.0.0.8
+etcd_host=10.0.0.9
+
+[control_plane]
+fukuno-66 ansible_host=10.0.0.30
 
 [storage]
 terabox ansible_host=10.0.0.10
