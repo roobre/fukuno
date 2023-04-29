@@ -141,14 +141,23 @@
           | openssl rsa -pubin -outform der 2>/dev/null
           | openssl dgst -sha256 -hex
           | sed 's/^.* //'
+    - name: Generate join configuration
+      ansible.builtin.shell:
+        cmd: |-
+          cat >> /etc/kubernetes/kubeadm.yaml <<EOF
+          ---
+          apiVersion: kubeadm.k8s.io/v1beta3
+          kind: JoinConfiguration
+          discovery:
+            bootstrapToken:
+              apiServerEndpoint: {{ apiserver_host }}:6443
+              token: {{ kubeadm_token.stdout }}
+              caCertHashes:
+                - sha256:{{ kube_ca_hash.stdout }}
+          EOF
     - name: Join node
       ansible.builtin.command:
-        cmd: >-
-          kubeadm join
-          --config /etc/kubernetes/kubeadm.yaml
-          --token={{ kubeadm_token.stdout }}
-          https://{{ apiserver_host }}:6443
-          --discovery-token-ca-cert-hash=sha256:{{ kube_ca_hash.stdout }}
+        cmd: kubeadm join --config /etc/kubernetes/kubeadm.yaml
 
 - name: Storage NFS setup
   hosts: storage
