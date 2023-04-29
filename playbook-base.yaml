@@ -4,7 +4,7 @@
 # a single CP node.
 
 - name: Common node configuration
-  hosts: control-plane:workers
+  hosts: control_plane:workers
   remote_user: root
   strategy: free
   tasks:
@@ -71,7 +71,7 @@
         enabled: yes
 
 - name: Control plane node configuration
-  hosts: control-plane
+  hosts: control_plane
   remote_user: root
   tasks:
     - name: Copy files
@@ -84,7 +84,7 @@
         state: present
 
 - name: Control plane is set up
-  hosts: control-plane
+  hosts: control_plane
   remote_user: root
   tasks:
     - name: Check for existing cluster
@@ -129,12 +129,12 @@
 
     - name: Generate token for node
       register: kubeadm_token
-      delegate_to: control-plane
+      delegate_to: control_plane
       ansible.builtin.command:
         cmd: kubeadm token create
     - name: Get certificate hash
       register: kube_ca_hash
-      delegate_to: control-plane
+      delegate_to: control_plane
       ansible.builtin.shell:
         cmd: >-
           openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt

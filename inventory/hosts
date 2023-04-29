@@ -2,7 +2,7 @@
 apiserver_host=10.0.0.8
 etcd_host=10.0.0.9
 
-[control-plane]
+[control_plane]
 fukuno-66 ansible_host=10.0.0.30
 
 [storage]

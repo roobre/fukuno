@@ -5,7 +5,7 @@ metadata:
   namespace: kube-system
   labels:
     component: kine
-    tier: control-plane
+    tier: control_plane
 spec:
   hostNetwork: true
   priorityClassName: system-node-critical
