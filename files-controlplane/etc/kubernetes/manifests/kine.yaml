@@ -30,6 +30,10 @@ spec:
           name: postgres-data
         - mountPath: /var/run/postgresql/
           name: socket
+      resources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
       readinessProbe:
         failureThreshold: 1
         periodSeconds: 5
@@ -58,6 +62,10 @@ spec:
           name: etcd
         - containerPort: 8080
           name: metrics
+      resources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
       volumeMounts:
         - mountPath: /pki
           name: etcd-pki
