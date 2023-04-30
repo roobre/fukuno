@@ -2,7 +2,11 @@ apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 # Do not use systemd-resolved resolv.conf file.
 resolvConf: /etc/resolv.conf
-{%- if "control_plane" in group_names %}
+# Wait this duration for pods to gracefully terminate.
+shutdownGracePeriod: 30s
+# Of the duration above, the following duration will be reserved for terminating critical pods after non-critical ones.
+shutdownGracePeriodCriticalPods: 15s
+{% if "control_plane" in group_names %}
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
@@ -29,4 +33,4 @@ nodeRegistration:
 skipPhases:
   # Cilium replaces kube-proxy.
   - addon/kube-proxy
-{%- endif %}
+{% endif %}

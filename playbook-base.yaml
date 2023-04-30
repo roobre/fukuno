@@ -91,6 +91,12 @@
       register: admin_conf
       ansible.builtin.stat:
         path: /etc/kubernetes/admin.conf
+
+    - name: Sync kubelet config
+      ansible.builtin.shell:
+        cmd: kubeadm --config /etc/kubernetes/kubeadm.yaml init phase upload-config kubelet
+      when: admin_conf.stat.exists
+
     - meta: end_host
       when: admin_conf.stat.exists
 

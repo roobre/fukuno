@@ -8,11 +8,20 @@
   serial: 1
 
   tasks:
+    - name: Sync node configuration
+      ansible.builtin.shell:
+        cmd: kubeadm upgrade node
+    - name: Restart kubelet
+      ansible.builtin.systemd:
+        name: kubelet
+        state: restarted
+
     - name: Upgrade system
       register: upgraded
       community.general.pacman:
         upgrade: true
         update_cache: true
+
     - meta: end_host
       when: |
         ('packages' not in upgraded) or (upgraded.packages | length == 0)
@@ -25,6 +34,7 @@
       when: |
         upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length > 0
       ansible.builtin.reboot: {}
+
     - name: Wait until DNS is healthy
       delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.shell:
