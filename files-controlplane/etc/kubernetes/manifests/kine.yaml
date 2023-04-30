@@ -51,7 +51,7 @@ spec:
         runAsUser: 0
       args:
         - --listen-address=0.0.0.0:2379  # Kine logs will say it is listening on localhost only. Don't believe its lies.
-        - --metrics-bind-address=127.0.0.1:8080  # By default, it would listen on all interfaces.
+        - --metrics-bind-address=0.0.0.0:8080
         - --endpoint=postgres://kubernetes:kubernetes@/kubernetes?host=/socket
         - --server-cert-file=/pki/server.crt
         - --server-key-file=/pki/server.key
