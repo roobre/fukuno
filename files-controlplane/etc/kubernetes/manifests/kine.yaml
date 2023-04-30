@@ -55,7 +55,7 @@ spec:
         - --endpoint=postgres://kubernetes:kubernetes@/kubernetes?host=/socket
         - --server-cert-file=/pki/server.crt
         - --server-key-file=/pki/server.key
-        - --slow-sql-threshold=2s
+        - --slow-sql-threshold=3s
         - --datastore-max-open-connections=20  # We run on a CPU-bound server, try to not stress postgres too much.
       ports:
         - containerPort: 2379
