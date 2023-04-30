@@ -38,7 +38,7 @@
       upgraded.packages | intersect(['linux', 'linux-lts']) | length > 0
     ansible.builtin.reboot: {}
   - name: Wait until DNS is healthy
-    delegate_to: gigabox
+    delegate_to: "{{ groups['control_plane'][0] }}"
     ansible.builtin.shell:
       cmd: |
         kubectl wait --timeout=5m --for=condition=ready -n dnscrypt-proxy pods --all && \
