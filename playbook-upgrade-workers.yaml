@@ -21,21 +21,9 @@
     ansible.builtin.debug:
       var: upgraded.packages
 
-  - name: Restart container runtime
+  - name: Reboot node if critical packages were upgraded
     when: |
-      upgraded.packages | intersect(['kubelet', 'cri-o']) | length > 0
-    ansible.builtin.systemd:
-      name: crio
-      state: restarted
-  - name: Restart kubelet
-    when: |
-      upgraded.packages | intersect(['kubelet', 'cri-o']) | length > 0
-    ansible.builtin.systemd:
-      name: kubelet
-      state: restarted
-  - name: Reboot node if kernel was upgraded
-    when: |
-      upgraded.packages | intersect(['linux', 'linux-lts']) | length > 0
+      upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length > 0
     ansible.builtin.reboot: {}
   - name: Wait until DNS is healthy
     delegate_to: "{{ groups['control_plane'][0] }}"
