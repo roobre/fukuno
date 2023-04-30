@@ -14,7 +14,10 @@ spec:
       image: docker.io/postgres:15.2-alpine3.17
       imagePullPolicy: IfNotPresent
       args:
-        - --listen_addresses="127.0.0.1"
+        - -c
+        - listen_addresses=127.0.0.1
+        - -c
+        - shared_buffers=256MB  # Cached data. Default: 128MB
       env:
         - name: POSTGRES_USER
           value: kubernetes
