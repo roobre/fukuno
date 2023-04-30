@@ -40,6 +40,6 @@
   - name: Wait until DNS is healthy
     delegate_to: "{{ groups['control_plane'][0] }}"
     ansible.builtin.shell:
-      cmd: |
-        kubectl wait --timeout=5m --for=condition=ready -n dnscrypt-proxy pods --all && \
-        kubectl wait --timeout=2m --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
+      cmd: >-
+        kubectl wait --timeout=5m --for=condition=ready -n dnscrypt-proxy pods --all
+        && kubectl wait --timeout=2m --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
