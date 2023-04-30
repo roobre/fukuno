@@ -8,26 +8,26 @@
   serial: 1
 
   tasks:
-  - name: Upgrade system
-    register: upgraded
-    community.general.pacman:
-      upgrade: true
-      update_cache: true
-  - meta: end_host
-    when: |
-      ('packages' not in upgraded) or (upgraded.packages | length == 0)
+    - name: Upgrade system
+      register: upgraded
+      community.general.pacman:
+        upgrade: true
+        update_cache: true
+    - meta: end_host
+      when: |
+        ('packages' not in upgraded) or (upgraded.packages | length == 0)
 
-  - name: Print upgraded packages 
-    ansible.builtin.debug:
-      var: upgraded.packages
+    - name: Print upgraded packages
+      ansible.builtin.debug:
+        var: upgraded.packages
 
-  - name: Reboot node if critical packages were upgraded
-    when: |
-      upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length > 0
-    ansible.builtin.reboot: {}
-  - name: Wait until DNS is healthy
-    delegate_to: "{{ groups['control_plane'][0] }}"
-    ansible.builtin.shell:
-      cmd: >-
-        kubectl wait --timeout=5m --for=condition=ready -n dnscrypt-proxy pods --all
-        && kubectl wait --timeout=2m --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
+    - name: Reboot node if critical packages were upgraded
+      when: |
+        upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length > 0
+      ansible.builtin.reboot: {}
+    - name: Wait until DNS is healthy
+      delegate_to: "{{ groups['control_plane'][0] }}"
+      ansible.builtin.shell:
+        cmd: >-
+          kubectl wait --timeout=5m --for=condition=ready -n dnscrypt-proxy pods --all
+          && kubectl wait --timeout=2m --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
