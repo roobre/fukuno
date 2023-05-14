@@ -4,7 +4,9 @@ metadata:
   name: kine
   namespace: kube-system
   labels:
-    component: kine
+    app.kubernetes.io/name: kine
+    app.kubernetes.io/component: kine
+    app.kubernetes.io/part-of: control-plane
     tier: control_plane
 spec:
   hostNetwork: true
