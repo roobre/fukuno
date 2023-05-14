@@ -4,6 +4,7 @@
   remote_user: root
 
   # Upgrade hosts one by one
+  #strategy: mitogen_host_pinned
   strategy: host_pinned
   serial: 1
 

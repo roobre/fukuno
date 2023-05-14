@@ -6,6 +6,7 @@
 - name: Common node configuration
   hosts: control_plane:workers
   remote_user: root
+  #strategy: mitogen_free
   strategy: free
   tasks:
     - name: Core packages are installed
@@ -168,7 +169,7 @@
 - name: Storage NFS setup
   hosts: storage
   remote_user: root
-  strategy: free
+  strategy: mitogen_free
   tasks:
     - name: Configure NFS exports
       ansible.builtin.copy:

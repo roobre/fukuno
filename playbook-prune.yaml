@@ -1,6 +1,7 @@
 - name: Cleanup unused images
   hosts: workers
   remote_user: root
+  #strategy: mitogen_free
   strategy: free
   tasks:
   - name: Crictl prune
