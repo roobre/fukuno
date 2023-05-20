@@ -169,7 +169,8 @@
 - name: Storage NFS setup
   hosts: storage
   remote_user: root
-  strategy: mitogen_free
+  #strategy: mitogen_free
+  strategy: free
   tasks:
     - name: Configure NFS exports
       ansible.builtin.copy:
