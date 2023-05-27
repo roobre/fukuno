@@ -181,6 +181,8 @@
           /mnt/z2/k8s  10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
           # Media
           /mnt/z2/media  10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
+          # NVR/frigate
+          /mnt/z2/nvr/frigate  10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
         dest: /etc/exports.d/kubernetes.exports
     - name: Enable NFS server
       ansible.builtin.systemd:
