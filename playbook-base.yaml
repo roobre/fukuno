@@ -71,6 +71,11 @@
         name: kubelet
         enabled: yes
 
+    - name: fstrim is enabled
+      ansible.builtin.systemd:
+        name: fstrim.timer
+        enabled: yes
+
 - name: Control plane node configuration
   hosts: control_plane
   remote_user: root
