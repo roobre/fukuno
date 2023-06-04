@@ -31,10 +31,24 @@
       ansible.builtin.debug:
         var: upgraded.packages
 
-    - name: Reboot node if critical packages were upgraded
+    - meta: end_host
       when: |
-        upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length > 0
+        upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length == 0
+
+    - name: Cordon and train node
+      delegate_to: "{{ groups['control_plane'][0] }}"
+      ansible.builtin.shell:
+        cmd: >-
+          kubectl cordon "{{ ansible_host }}"
+          && kubectl drain "{{ ansible_host }}" --ignore-daemonsets=true --delete-emptydir-data=true --timeout=90s
+
+    - name: Reboot node
       ansible.builtin.reboot: {}
+
+    - name: Uncordon node
+      ansible.builtin.shell:
+        cmd: >-
+          kubectl uncordon "{{ ansible_host }}"
 
     - name: Wait until DNS is healthy
       delegate_to: "{{ groups['control_plane'][0] }}"
