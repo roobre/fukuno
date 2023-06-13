@@ -14,6 +14,7 @@
         # https://unix.stackexchange.com/questions/274727/how-to-force-pacman-to-answer-yes-to-all-questions/584001#584001
         extra_args: --ask 4 --noconfirm
         state: present
+        update_cache: true
         name: [
           # Container runtime
           cri-o, crictl, crun,
