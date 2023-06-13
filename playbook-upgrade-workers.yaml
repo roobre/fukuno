@@ -12,10 +12,6 @@
     - name: Sync node configuration
       ansible.builtin.shell:
         cmd: kubeadm upgrade node
-    - name: Restart kubelet
-      ansible.builtin.systemd:
-        name: kubelet
-        state: restarted
 
     - name: Upgrade system
       register: upgraded
