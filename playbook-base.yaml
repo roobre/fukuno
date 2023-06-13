@@ -21,6 +21,8 @@
           kubelet, kubectl,
           # Kubeadm is needed in worker nodes as it provides /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
           kubeadm,
+          # Kernel and headers.
+          linux-lts, linux-lts-headers,
           # NFS
           nfs-utils,
           # Misc node administration tools.
