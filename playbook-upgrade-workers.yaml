@@ -42,6 +42,7 @@
       ansible.builtin.reboot: {}
 
     - name: Uncordon node
+      delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.shell:
         cmd: >-
           kubectl uncordon "{{ inventory_hostname }}"
