@@ -26,6 +26,8 @@
           linux-lts, linux-lts-headers,
           # NFS
           nfs-utils,
+          # Networking
+          openresolv, # Required for iwd.
           # Misc node administration tools.
           btop, htop, lsof, nano
         ]
