@@ -31,7 +31,7 @@
       when: |
         upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length == 0
 
-    - name: Cordon and train node
+    - name: Cordon and drain node
       delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.shell:
         cmd: >-
