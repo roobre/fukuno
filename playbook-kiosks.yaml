@@ -1,0 +1,91 @@
+- name: Kiosk upgrade and setup
+  hosts: kiosks
+  remote_user: root
+  #strategy: mitogen_free
+  strategy: free
+  tasks:
+    - name: Copy folder structure
+      ansible.builtin.file:
+        path: "/{{ item.path }}"
+        state: directory
+        recurse: yes
+      with_community.general.filetree: "{{ playbook_dir }}/files-kiosk/"
+      loop_control:
+        label: "/{{ item.path }}"
+      when: item.state == 'directory'
+    - name: Copy and render template files
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: "/{{ item.path | regex_replace('\\.jinja2$', '') }}"
+      with_community.general.filetree: "{{ playbook_dir }}/files-kiosk/"
+      loop_control:
+        label: "/{{ item.path | regex_replace('\\.jinja2$', '') }}"
+      when: item.state == 'file' and item.path is regex('\\.jinja2$')
+    - name: Copy static files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "/{{ item.path }}"
+      with_community.general.filetree: "{{ playbook_dir }}/files-kiosk/"
+      loop_control:
+        label: "/{{ item.path }}"
+      when: item.state == 'file' and item.path is not regex('\\.jinja2$')
+
+    - name: Fix permissions for copied scripts
+      ansible.builtin.shell: |
+        chown chromium-kiosk:chromium-kiosk /var/lib/chromium-kiosk/chromium-kiosk-prehook.sh
+        chmod 750 /var/lib/chromium-kiosk/chromium-kiosk-prehook.sh
+
+    - name: Set timezone
+      ansible.builtin.file:
+        src: /usr/share/zoneinfo/Europe/Madrid
+        path: /etc/localtime
+        state: link
+
+    - name: NTP is enabled
+      ansible.builtin.systemd:
+        name: systemd-timesyncd
+        state: started
+        enabled: yes
+
+    - name: On schedule is set up
+      ansible.builtin.systemd:
+        name: dpms@on.timer
+        state: started
+        enabled: yes
+    - name: Off schedule is set up
+      ansible.builtin.systemd:
+        name: dpms@off.timer
+        state: started
+        enabled: yes
+
+    - name: Core packages are installed
+      community.general.pacman:
+        update_cache: true
+        state: present
+        name: [
+          # Kiosk
+          chromium-kiosk,
+          # Useful for sending keystrokes over ssh
+          # DISPLAY=:0 xdotool getactivewindow type 'your text here'
+          xdotool,
+          # Required for iwd.
+          openresolv,
+          # Misc node administration tools.
+          btop, htop, lsof, nano
+        ]
+
+    - name: Upgrade system
+      register: upgraded
+      community.general.pacman:
+        upgrade: true
+
+    - name: Print upgraded packages
+      when: |
+        'packages' in upgraded
+      ansible.builtin.debug:
+        var: upgraded.packages
+
+    - name: Reboot node
+      ansible.builtin.reboot: {}
+      when: |
+        ('packages' in upgraded) and (upgraded.packages | intersect(['chromium-kiosk', 'qiosk', 'linux', 'linux-lts']) | length > 0)

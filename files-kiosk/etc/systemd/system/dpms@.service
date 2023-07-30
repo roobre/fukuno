@@ -1,0 +1,7 @@
+[Unit]
+Description=Turn screen on or off
+
+[Service]
+Type=oneshot
+Environment="DISPLAY=:0" "XAUTHORITY=/var/lib/chromium-kiosk/.Xauthority"
+ExecStart=/usr/bin/xset dpms force %i

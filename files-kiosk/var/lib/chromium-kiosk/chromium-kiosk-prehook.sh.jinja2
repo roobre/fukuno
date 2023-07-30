@@ -1,0 +1,11 @@
+#!/bin/bash
+
+{% if ansible_host.startswith('hasspa') %}
+# Rotate screen after Xorg has booted.
+# Removing the sleep command will cause the hasspa to hang.
+(
+  sleep 15
+  xinput set-prop "pointer:Goodix Capacitive TouchScreen" "Coordinate Transformation Matrix" 0 1 0  -1 0 1  0 0 1
+) &
+
+{% endif %}

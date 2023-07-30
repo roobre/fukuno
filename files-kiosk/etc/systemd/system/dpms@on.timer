@@ -1,0 +1,8 @@
+[Unit]
+Description=Turn screen on
+
+[Timer]
+OnCalendar=*-*-* 09:00:00
+
+[Install]
+WantedBy=timers.target

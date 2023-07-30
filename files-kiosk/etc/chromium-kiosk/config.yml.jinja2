@@ -1,0 +1,52 @@
+FULL_SCREEN: true # Run in full screen mode, browser will use whole screen without any way for user to close it
+TOUCHSCREEN: true # Enables support for touchscreen
+HOME_PAGE: >-
+  {% if ansible_host == "grafanista" %}
+  https://ro.grafana.net/playlists/play/c7737b42-d9dc-400f-a1da-dad40d9c2f3b?kiosk
+  {% else %}
+  https://ha.terabox.moe
+  {% endif %}
+
+IDLE_TIME: 0 # Seconds, How log must be kiosk idle to redirect to HOME_PAGE, 0=disabled
+WHITE_LIST:
+  ENABLED: false  # is white list enabled
+  URLS: []   # List of whitelisted urls, glob format is supported (eg,: *,google.*/news)
+  IFRAME_ENABLED: true  # True to enable all iframes, list of urls to specify enabled iframes
+
+NAV_BAR:
+  ENABLED: false # is nav bar enabled
+  ENABLED_BUTTONS: ['home', 'reload', 'back', 'forward'] # Enabled buttons on navbar, order matters
+  HORIZONTAL_POSITION: 'center' # horizontal position on the screen
+  VERTICAL_POSITION: 'bottom' # Vertical position on the screen
+  WIDTH: 100 # Width of a bar in %
+  HEIGHT: 5 # Height of a bar in %
+
+VIRTUAL_KEYBOARD:
+  ENABLED: {{ ansible_host.startswith('hasspa') }}
+
+
+# TODO: DISPLAY_ROTATION appears to be broken for hasspas. As a workaround, we rotate only the display here and
+# the touchcreen via libinput options in xorg.conf.d.
+#DISPLAY_ROTATION: '{% if ansible_host == "grafanista" %}normal{% else %}right{% endif %}'
+#Rotates screen individually (do not rotate touchscreen) when X server starts options are (normal|left|right|inverted), remove DISPLAY_ROTATION for this to work
+SCREEN_ROTATION: '{% if ansible_host == "grafanista" %}normal{% else %}right{% endif %}'
+#TOUCHSCREEN_ROTATION: 'normal'  #Rotates touchscreen individually (do not rotate screen) when X server starts options are (normal|left|right|inverted), remove DISPLAY_ROTATION for this to work
+#EXTRA_ARGUMENTS: # Pass extra arguments to used browser, in case of qiosk thse arguments are passed to chromium using QTWEBENGINE_CHROMIUM_FLAGS
+
+ADDRESS_BAR:
+  ENABLED: false
+
+# Allowed features in browser
+# Uncomment feature you want to enable
+ALLOWED_FEATURES:
+  - geolocation  # Allows geolocation
+  - media-audio-capture  # Allows recording audio from capture device (MIC)
+  - media-video-capture  # Allows recording vide from capture device (Camera)
+  - media-audio-video-capture  # Allows recording audio and video from capture device (Camera w/ MIC)
+  - notifications  # Allows notifications to be accepted from website
+#  - desktop-audio-video-capture  # Allows recording desktop audio and video
+#  - desktop-video-capture  # Allows recording desktop video
+#  - invalid-certificate  # Ignores invalid certificate
+#  - mouse-lock  # Allows locking mouse inside browser full screen window
+
+#REMOTE_DEBUGGING: 8080  # Set to port number to enable available only when using qiosk browser
