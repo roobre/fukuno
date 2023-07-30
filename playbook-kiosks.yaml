@@ -47,12 +47,15 @@
         state: started
         enabled: yes
 
+    # dpms is heavily bugged on hasspas, the screen won't turn back on until hard reset.
     - name: On schedule is set up
+      when: ansible_host == "grafanista"
       ansible.builtin.systemd:
         name: dpms@on.timer
         state: started
         enabled: yes
     - name: Off schedule is set up
+      when: ansible_host == "grafanista"
       ansible.builtin.systemd:
         name: dpms@off.timer
         state: started
