@@ -11,6 +11,11 @@
       community.general.pacman:
         upgrade: true
         update_cache: true
+    - name: Print upgraded packages
+      when: |
+        'packages' in upgraded
+      ansible.builtin.debug:
+        var: upgraded.packages
 
     - name: Reboot node
       ansible.builtin.reboot: {}
