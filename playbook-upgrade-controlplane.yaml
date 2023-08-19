@@ -24,7 +24,7 @@
 
     - name: Wait for node to be online
       ansible.builtin.shell:
-        cmd: kubectl wait --for=condition=ready node "{{ inventory_hostname }}" --timeout=1m
+        cmd: kubectl wait --for=condition=ready node "{{ inventory_hostname }}" --timeout="{{ timeout_node_ready }}"
 
     - name: Plan upgrade
       register: plan

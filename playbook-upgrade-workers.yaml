@@ -35,15 +35,15 @@
       delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.shell:
         cmd: >-
-          kubectl wait --timeout=5m --for=condition=ready -n dnscrypt-proxy pods --all
-          && kubectl wait --timeout=2m --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
+          kubectl wait --timeout="{{ timeout_critical_ready }}" --for=condition=ready -n dnscrypt-proxy pods --all
+          && kubectl wait --timeout="{{ timeout_critical_ready }}" --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
 
     - name: Cordon and drain node
       delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.shell:
         cmd: >-
           kubectl cordon "{{ inventory_hostname }}"
-          && kubectl drain "{{ inventory_hostname }}" --ignore-daemonsets=true --delete-emptydir-data=true --timeout=90s
+          && kubectl drain "{{ inventory_hostname }}" --ignore-daemonsets=true --delete-emptydir-data=true --timeout="{{ timeout_node_drain }}"
 
     - name: Reboot node
       ansible.builtin.reboot: {}
@@ -51,7 +51,7 @@
     - name: Wait for node to be online
       delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.shell:
-        cmd: kubectl wait --for=condition=ready node "{{ inventory_hostname }}" --timeout=1m
+        cmd: kubectl wait --for=condition=ready node "{{ inventory_hostname }}" --timeout="{{ timeout_node_ready }}"
 
     - name: Uncordon node
       delegate_to: "{{ groups['control_plane'][0] }}"

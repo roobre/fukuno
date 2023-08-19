@@ -2,6 +2,10 @@
 apiserver_host=10.0.0.8
 etcd_host=10.0.0.9
 
+timeout_node_ready=2m
+timeout_node_drain=1m
+timeout_critical_ready=2m
+
 [control_plane]
 fukuno-66 ansible_host=10.0.0.30
 
