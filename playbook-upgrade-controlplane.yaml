@@ -22,6 +22,10 @@
       when: |
         ('packages' in upgraded) and (upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length > 0)
 
+    - name: Wait for node to be online
+      ansible.builtin.shell:
+        cmd: kubectl wait --for=condition=ready node "{{ inventory_hostname }}" --timeout=1m
+
     - name: Plan upgrade
       register: plan
       ansible.builtin.shell:

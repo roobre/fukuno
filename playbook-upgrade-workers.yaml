@@ -31,6 +31,13 @@
       when: |
         upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length == 0
 
+    - name: Wait until DNS is healthy
+      delegate_to: "{{ groups['control_plane'][0] }}"
+      ansible.builtin.shell:
+        cmd: >-
+          kubectl wait --timeout=5m --for=condition=ready -n dnscrypt-proxy pods --all
+          && kubectl wait --timeout=2m --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
+
     - name: Cordon and drain node
       delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.shell:
@@ -41,15 +48,13 @@
     - name: Reboot node
       ansible.builtin.reboot: {}
 
+    - name: Wait for node to be online
+      delegate_to: "{{ groups['control_plane'][0] }}"
+      ansible.builtin.shell:
+        cmd: kubectl wait --for=condition=ready node "{{ inventory_hostname }}" --timeout=1m
+
     - name: Uncordon node
       delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.shell:
         cmd: >-
           kubectl uncordon "{{ inventory_hostname }}"
-
-    - name: Wait until DNS is healthy
-      delegate_to: "{{ groups['control_plane'][0] }}"
-      ansible.builtin.shell:
-        cmd: >-
-          kubectl wait --timeout=5m --for=condition=ready -n dnscrypt-proxy pods --all
-          && kubectl wait --timeout=2m --for=condition=ready -n dnsmasq pods --selector=app.kubernetes.io/component=dns
