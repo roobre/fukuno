@@ -17,7 +17,7 @@ terabox   ansible_host=10.0.0.10
 fukuno-37 ansible_host=10.0.0.31
 fukuno-f6 ansible_host=10.0.0.32 # fukuno-f6 has both 10.0.0.32 (wireless) and dhcp (wired)
 fukuno-cc ansible_host=10.0.0.33
-fukuno-a7 ansible_host=10.0.0.34
+#fukuno-a7 ansible_host=10.0.0.34 # Retired
 
 [kiosks]
 grafanista
