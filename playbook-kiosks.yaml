@@ -72,7 +72,7 @@
           PermanentMACAddress=00:e0:4c:b8:22:01
 
           [Link]
-          MACAddress=00:e0:4c:b8:22:{{ "%x" | format(255 | random(seed=inventory_hostname)) }}
+          MACAddress={{ '00:e0:4c' | community.general.random_mac(seed=inventory_hostname) }}
 
     - name: Core packages are installed
       community.general.pacman:
