@@ -3,7 +3,9 @@ TOUCHSCREEN: true # Enables support for touchscreen
 HOME_PAGE: >-
   {% if ansible_host == "grafanista" %}
   https://ro.grafana.net/playlists/play/c7737b42-d9dc-400f-a1da-dad40d9c2f3b?kiosk
-  {% else %}
+  {% elif ansible_host == "grocypanel" %}
+  https://grocy.roob.re
+  {% elif "hasspa" in ansible_host %}
   https://ha.terabox.moe
   {% endif %}
 
@@ -22,18 +24,18 @@ NAV_BAR:
   HEIGHT: 5 # Height of a bar in %
 
 VIRTUAL_KEYBOARD:
-  ENABLED: {{ ansible_host.startswith('hasspa') }}
+  ENABLED: {{ movistar_home is defined }}
 
-{% if ansible_host.startswith('hasspa') %}
+{% if movistar_home is defined %}
 EXTRA_ENV_VARS:  # Extra env vars set to the kiosk session
   QT_SCALE_FACTOR: "1.2"
 {% endif %}
 
 # TODO: DISPLAY_ROTATION appears to be broken for hasspas. As a workaround, we rotate only the display here and
 # the touchcreen via libinput options in xorg.conf.d.
-#DISPLAY_ROTATION: '{% if ansible_host == "grafanista" %}normal{% else %}right{% endif %}'
+#DISPLAY_ROTATION: '{% if movistar_home is defined %}right{% else %}normal{% endif %}'
 #Rotates screen individually (do not rotate touchscreen) when X server starts options are (normal|left|right|inverted), remove DISPLAY_ROTATION for this to work
-SCREEN_ROTATION: '{% if ansible_host == "grafanista" %}normal{% else %}right{% endif %}'
+SCREEN_ROTATION: '{% if movistar_home is defined %}right{% else %}normal{% endif %}'
 #TOUCHSCREEN_ROTATION: 'normal'  #Rotates touchscreen individually (do not rotate screen) when X server starts options are (normal|left|right|inverted), remove DISPLAY_ROTATION for this to work
 #EXTRA_ARGUMENTS: # Pass extra arguments to used browser, in case of qiosk thse arguments are passed to chromium using QTWEBENGINE_CHROMIUM_FLAGS
 

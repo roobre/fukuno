@@ -21,4 +21,4 @@ fukuno-cc ansible_host=10.0.0.33
 
 [kiosks]
 grafanista
-hasspa1
+hasspa1 movistar_home=true
