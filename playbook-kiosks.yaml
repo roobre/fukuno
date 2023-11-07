@@ -61,6 +61,19 @@
         state: started
         enabled: yes
 
+    - name: Drop patch for MAC address duplication
+      when: movistar_home is defined
+      ansible.builtin.copy:
+        dest: /etc/systemd/network/01-mac-change.link
+        content: |
+          # All Movistar Home units ship with the same MAC address.
+          # This should not have any effect in other hardware even if present.
+          [Match]
+          PermanentMACAddress=00:e0:4c:b8:22:01
+
+          [Link]
+          MACAddress=00:e0:4c:b8:22:{{ "%x" | format(255 | random(seed=inventory_hostname)) }}
+
     - name: Core packages are installed
       community.general.pacman:
         update_cache: true
