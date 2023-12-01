@@ -13,7 +13,7 @@ spec:
   priorityClassName: system-node-critical
   containers:
     - name: kine-postgres
-      image: docker.io/postgres:15.5-alpine@sha256:206dd8f8653f1e1c8a0394c4476802878e01b28e5fb4d76424b6dc9bc8751bf9
+      image: docker.io/postgres:15.5-alpine@sha256:0da71d39d805d10eef7e2256f5af6f0acaa68cd7c7ea231a6d1c5766a657043b
       imagePullPolicy: IfNotPresent
       args:
         - -c
