@@ -103,6 +103,22 @@
       ansible.builtin.stat:
         path: /etc/kubernetes/admin.conf
 
+    # TODO: This is a terrible hack, but the kubelet does not expose any way to check if it has already refreshed
+    # any changes made to the static manifests directory.
+    - name: Wait for static pods to reconcile
+      when: admin_conf.stat.exists
+      ansible.builtin.wait_for:
+        timeout: 60
+
+    - name: Ensure control plane is up
+      ansible.builtin.shell:
+        cmd: kubectl get nodes
+      register: getnodes
+      until: getnodes is not failed
+      when: admin_conf.stat.exists
+      retries: 3
+      delay: 10
+
     - name: Sync kubelet config
       ansible.builtin.shell:
         cmd: kubeadm --config /etc/kubernetes/kubeadm.yaml init phase upload-config kubelet
