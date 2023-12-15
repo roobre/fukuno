@@ -1,9 +1,0 @@
-- name: Cleanup unused images
-  hosts: workers
-  remote_user: root
-  #strategy: mitogen_free
-  strategy: free
-  tasks:
-  - name: Crictl prune
-    ansible.builtin.command:
-      cmd: crictl --timeout 5s rmi --prune

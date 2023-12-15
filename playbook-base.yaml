@@ -29,8 +29,16 @@
           # Networking
           openresolv, # Required for iwd.
           # Misc node administration tools.
-          btop, htop, lsof, nano
+          btop, htop, lsof, nano, pacman-contrib,
         ]
+
+    - name: Clean up container caches
+      ansible.builtin.command:
+        cmd: crictl --timeout 10s rmi --prune
+
+    - name: Clean up pacman caches
+      ansible.builtin.command:
+        cmd: paccache -r
 
     - name: Copy folder structure
       ansible.builtin.file:
