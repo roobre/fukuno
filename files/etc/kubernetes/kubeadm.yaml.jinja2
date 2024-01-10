@@ -1,7 +1,7 @@
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-# Do not use systemd-resolved resolv.conf file.
-resolvConf: /etc/resolv.conf
+# Use a resolv.conf file without the curry domain/search to prevent ndots spam.
+resolvConf: /etc/resolv-k8s.conf
 # Wait this duration for pods to gracefully terminate.
 shutdownGracePeriod: 40s
 # Of the duration above, the following duration will be reserved for terminating critical pods after non-critical ones.
