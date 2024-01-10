@@ -117,7 +117,6 @@
       when: admin_conf.stat.exists
       ansible.builtin.wait_for:
         timeout: 60
-
     - name: Ensure control plane is up
       ansible.builtin.shell:
         cmd: kubectl get nodes
@@ -126,8 +125,12 @@
       when: admin_conf.stat.exists
       retries: 3
       delay: 10
+    - name: Wait a bit more
+      when: admin_conf.stat.exists
+      ansible.builtin.wait_for:
+        timeout: 20
 
-    - name: Sync kubelet config
+    - name: Upload kubelet config to the cluster
       ansible.builtin.shell:
         cmd: kubeadm --config /etc/kubernetes/kubeadm.yaml init phase upload-config kubelet
       when: admin_conf.stat.exists
