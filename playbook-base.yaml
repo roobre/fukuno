@@ -212,10 +212,8 @@
     - name: Configure NFS exports
       ansible.builtin.copy:
         content: |
-          # Legacy HASS mount
-          /mnt/znvme/k8s/homeassistant	10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
           # NFS provisioner
-          /mnt/znvme/k8s  10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
+          /mnt/znvme/k8s    10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
           # Media
           /mnt/z2/media  10.0.0.0/26(rw,async,no_root_squash) 127.0.0.1(rw,async,no_root_squash)
           # NVR/frigate
