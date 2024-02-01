@@ -123,12 +123,12 @@
       register: getnodes
       until: getnodes is not failed
       when: admin_conf.stat.exists
-      retries: 3
+      retries: 6
       delay: 10
     - name: Wait a bit more
       when: admin_conf.stat.exists
       ansible.builtin.wait_for:
-        timeout: 20
+        timeout: 60
 
     - name: Upload kubelet config to the cluster
       ansible.builtin.shell:
