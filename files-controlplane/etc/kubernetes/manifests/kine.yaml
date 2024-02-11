@@ -34,8 +34,8 @@ spec:
           name: socket
       resources:
         requests:
-          cpu: 500m
-          memory: 512Mi
+          cpu: 250m
+          memory: 256Mi
       readinessProbe:
         failureThreshold: 1
         periodSeconds: 5
@@ -66,8 +66,8 @@ spec:
           name: metrics
       resources:
         requests:
-          cpu: 500m
-          memory: 512Mi
+          cpu: 250m
+          memory: 256Mi
       volumeMounts:
         - mountPath: /pki
           name: etcd-pki
