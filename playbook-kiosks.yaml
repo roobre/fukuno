@@ -87,8 +87,15 @@
           # Required for iwd.
           openresolv,
           # Misc node administration tools.
-          btop, htop, lsof, nano
+          btop, htop, lsof, nano,
+          # zram
+          zram-generator,
         ]
+
+    - name: zram is enabled
+      ansible.builtin.systemd:
+        name: systemd-zram-setup@zram0.service
+        state: started
 
     - name: Upgrade system
       register: upgraded
