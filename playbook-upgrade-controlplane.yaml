@@ -21,8 +21,13 @@
       when: |
         ('packages' in upgraded) and (upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length > 0)
       ansible.builtin.reboot:
-        test_command: |
-          kubectl wait --for=condition=ready node "{{ inventory_hostname }}" --timeout=3s"
+    - name: Ensure control plane is up
+      ansible.builtin.shell:
+        cmd: kubectl get nodes
+      register: getnodes
+      until: getnodes is not failed
+      retries: 6
+      delay: 10
 
     - name: Plan upgrade
       register: plan
