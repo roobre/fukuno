@@ -1,0 +1,24 @@
+- name: Renew control plane certificates
+  hosts: control_plane
+  remote_user: root
+  tasks:
+   # We are not using kubeadm-managed etcd, but we can get advantage of it to generate certificates.
+    - name: Create config file for generating etcd certs
+      ansible.builtin.copy:
+        dest: /tmp/kubeadm-etcd-certs.yaml
+        content: |
+          apiVersion: kubeadm.k8s.io/v1beta3
+          kind: ClusterConfiguration
+          etcd:
+            local:
+              serverCertSANs:
+                - {{ etcd_host }}
+    - name: Generate etcd certificates
+      ansible.builtin.shell:
+        cmd: >-
+          kubeadm certs renew etcd-server --config /tmp/kubeadm-etcd-certs.yaml
+          && kubeadm certs renew apiserver-etcd-client --config /tmp/kubeadm-etcd-certs.yaml
+    - name: Stop kine container
+      ansible.builtin.shell:
+        cmd: |
+          crictl stop $(crictl ps --name kine-kine -q)
