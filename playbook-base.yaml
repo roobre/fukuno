@@ -174,12 +174,12 @@
 
     - name: Generate token for node
       register: kubeadm_token
-      delegate_to: control_plane
+      delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.command:
         cmd: kubeadm token create
     - name: Get certificate hash
       register: kube_ca_hash
-      delegate_to: control_plane
+      delegate_to: "{{ groups['control_plane'][0] }}"
       ansible.builtin.shell:
         cmd: >-
           openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt
