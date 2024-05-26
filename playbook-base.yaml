@@ -33,8 +33,9 @@
         ]
 
     - name: Clean up container caches
-      ansible.builtin.command:
-        cmd: crictl --timeout 10s rmi --prune
+      ansible.builtin.shell:
+        # Allow failure, the node might not be set up yet.
+        cmd: crictl --timeout 10s rmi --prune || true
 
     - name: Clean up pacman caches
       ansible.builtin.command:
