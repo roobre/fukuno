@@ -18,6 +18,7 @@
         var: upgraded.packages
 
     - name: Reboot node
+      register: reboot
       when: |
         ('packages' in upgraded) and (upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length > 0)
       ansible.builtin.reboot:
@@ -28,7 +29,10 @@
       until: getnodes is not failed
       retries: 6
       delay: 10
-
+    - name: Wait for cluster to settle after CP reboot
+      when: reboot is not skipped
+      ansible.builtin.wait_for:
+        timeout: 60
     - name: Plan upgrade
       register: plan
       ansible.builtin.shell:
