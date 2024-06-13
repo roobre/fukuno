@@ -45,7 +45,7 @@
       # TODO: Be smarter than components[0].
       # Hack: We strip the first line as kubeadm outputs a non-json log line in there.
       ansible.builtin.set_fact:
-        new_version: "{{ (plan.stdout_lines[1:] | join | from_json).components[0].newVersion }}"
+        new_version: "{{ (plan.stdout_lines | join | from_json).availableUpgrades[0].components[0].newVersion }}"
       when: |
          new_version is not defined
 
