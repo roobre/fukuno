@@ -45,7 +45,7 @@ spec:
             - -c
             - pg_isready --username=$POSTGRES_USER --dbname=$POSTGRES_DB --timeout=1
     - name: kine-kine
-      image: docker.io/rancher/kine:v0.13.0-amd64
+      image: docker.io/rancher/kine:v0.13.2-amd64
       imagePullPolicy: IfNotPresent
       securityContext:
         # kine runs as nobody by default, but on this configuration it needs to read certs from /etc/kubernetes/pki,
