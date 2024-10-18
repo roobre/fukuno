@@ -16,12 +16,12 @@
         'packages' in upgraded
       ansible.builtin.debug:
         var: upgraded.packages
-
     - name: Reboot node
       register: reboot
       when: |
         ('packages' in upgraded) and (upgraded.packages | intersect(['kubelet', 'cri-o', 'linux', 'linux-lts']) | length > 0)
       ansible.builtin.reboot:
+
     - name: Ensure control plane is up
       ansible.builtin.shell:
         cmd: kubectl get nodes
@@ -33,32 +33,31 @@
       when: reboot is not skipped
       ansible.builtin.wait_for:
         timeout: 60
-    - name: Plan upgrade
-      register: plan
+
+    - name: Extract kubeadm version
+      register: kubeadm_version
       ansible.builtin.shell:
-        cmd: kubeadm upgrade plan -o json
-
-    - meta: end_host
-      when: plan.stdout_lines | length <= 1
-
-    - name: Figure upgrade version if it was not provided
-      # TODO: Be smarter than components[0].
-      # Hack: We strip the first line as kubeadm outputs a non-json log line in there.
-      ansible.builtin.set_fact:
-        new_version: "{{ (plan.stdout_lines | join | from_json).availableUpgrades[0].components[0].newVersion }}"
+        cmd: |-
+          pacman -Qi kubeadm | grep Version | cut -d':' -f 2 | cut -d- -f 1
+    - ansible.builtin.set_fact:
+        new_version: "{{ kubeadm_version.stdout_lines[0] | trim }}"
       when: |
          new_version is not defined
 
+    - name: Plan upgrade
+      register: plan
+      ansible.builtin.shell:
+        cmd: kubeadm upgrade plan "{{ new_version }}" -o json
+    - meta: end_host
+      when: plan.stdout_lines | length <= 1
     - name: Confirm upgrade
       ansible.builtin.pause:
         prompt: Confirm upgrade to {{ new_version }}
-
     - name: Apply upgrade
       register: apply
       ansible.builtin.shell:
         cmd: |
           kubeadm upgrade apply -y "{{ new_version }}"
-
     - name: Echo apply log
       ansible.builtin.debug:
         var: apply.stdout_lines
