@@ -39,7 +39,7 @@
 
     - name: Clean up pacman caches
       ansible.builtin.command:
-        cmd: paccache -r
+        cmd: paccache -rk2
 
     - name: Copy folder structure
       ansible.builtin.file:
