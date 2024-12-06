@@ -3,7 +3,7 @@ kind: KubeletConfiguration
 # Use a resolv.conf file without the curry domain/search to prevent ndots spam.
 resolvConf: /etc/resolv-k8s.conf
 # Wait this duration for pods to gracefully terminate.
-shutdownGracePeriod: 40s
+shutdownGracePeriod: 120s
 # Of the duration above, the following duration will be reserved for terminating critical pods after non-critical ones.
 shutdownGracePeriodCriticalPods: 20s
 {% if "control_plane" in group_names %}
